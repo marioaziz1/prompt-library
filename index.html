@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coaching Process Steps — Coach for Radiance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --charcoal: #111111;
+    --card: #181818;
+    --card-hover: #1e1e1e;
+    --border: #2a2a2a;
+    --yellow: #f5c800;
+    --yellow-dim: #b89300;
+    --yellow-glow: rgba(245, 200, 0, 0.12);
+    --white: #f0f0f0;
+    --gray: #888;
+    --gray-light: #aaa;
+    --code-bg: #0e0e0e;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--charcoal); }
+  ::-webkit-scrollbar-thumb { background: var(--yellow-dim); border-radius: 3px; }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 clamp(16px, 4vw, 48px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 64px;
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .header-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    color: var(--yellow);
+    line-height: 1;
+  }
+
+  .header-sub {
+    font-size: 11px;
+    color: var(--gray);
+    letter-spacing: 0.5px;
+    display: none;
+  }
+
+  @media (min-width: 600px) { .header-sub { display: block; } }
+
+  /* ── SEARCH ── */
+  .search-wrap {
+    flex: 1;
+    max-width: 340px;
+    position: relative;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    pointer-events: none;
+  }
+
+  #searchInput {
+    width: 100%;
+    padding: 9px 12px 9px 38px;
+    background: var(--charcoal);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #searchInput::placeholder { color: var(--gray); }
+  #searchInput:focus { border-color: var(--yellow-dim); }
+
+  .prompt-count {
+    font-size: 12px;
+    color: var(--gray);
+    white-space: nowrap;
+  }
+
+  .prompt-count span { color: var(--yellow); font-weight: 600; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: clamp(48px, 8vw, 96px) clamp(16px, 4vw, 48px) clamp(32px, 5vw, 56px);
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--yellow-glow);
+    border: 1px solid rgba(245, 200, 0, 0.25);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--yellow);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--yellow);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 8vw, 80px);
+    line-height: 0.95;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--yellow);
+  }
+
+  .hero p {
+    color: var(--gray-light);
+    font-size: 15px;
+    max-width: 480px;
+    line-height: 1.7;
+  }
+
+  /* ── LAYOUT ── */
+  main {
+    padding: 0 clamp(16px, 4vw, 48px);
+    padding-bottom: 80px;
+  }
+
+  /* ── NAV TABS ── */
+  .tabs-wrap {
+    margin-bottom: 40px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs-wrap::-webkit-scrollbar { display: none; }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .tab-btn {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--gray);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+    margin-bottom: -1px;
+  }
+
+  .tab-btn:hover { color: var(--white); }
+  .tab-btn.active { color: var(--yellow); border-bottom-color: var(--yellow); }
+
+  /* ── SECTION ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 1px;
+    color: var(--white);
+  }
+
+  .section-title span {
+    color: var(--yellow);
+    margin-right: 10px;
+  }
+
+  .section-meta {
+    font-size: 12px;
+    color: var(--gray);
+  }
+
+  .copy-all-btn {
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--gray-light);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .copy-all-btn:hover {
+    border-color: var(--yellow-dim);
+    color: var(--yellow);
+  }
+
+  /* ── CARDS ── */
+  .cards-grid {
+    display: grid;
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    animation: fadeUp 0.4s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:hover {
+    border-color: rgba(245, 200, 0, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 0 var(--yellow-glow);
+  }
+
+  .card-header {
+    padding: 20px 24px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .card-header-left { flex: 1; }
+
+  .card-badge {
+    display: inline-block;
+    background: var(--yellow-glow);
+    border: 1px solid rgba(245, 200, 0, 0.2);
+    color: var(--yellow);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-bottom: 8px;
+  }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  .card-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    background: transparent;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--gray);
+  }
+
+  .card-toggle svg {
+    transition: transform 0.3s;
+  }
+
+  .card.open .card-toggle svg { transform: rotate(180deg); }
+  .card.open .card-toggle { border-color: var(--yellow-dim); color: var(--yellow); background: var(--yellow-glow); }
+
+  /* ── COLLAPSIBLE BODY ── */
+  .card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card.open .card-body {
+    max-height: 2000px;
+  }
+
+  .card-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 24px;
+  }
+
+  .prompt-block {
+    position: relative;
+    margin: 20px 24px 24px;
+  }
+
+  .prompt-scroll {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    max-height: 420px;
+    overflow-y: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.85;
+    color: #c8c8c8;
+    white-space: pre-wrap;
+    word-break: break-word;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .prompt-scroll::-webkit-scrollbar { width: 4px; }
+  .prompt-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* Highlight keys in prompts */
+  .prompt-scroll .key { color: var(--yellow); }
+  .prompt-scroll .bracket { color: #7dd3fc; }
+
+  .card-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    background: var(--yellow);
+    color: #000;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .copy-btn:hover { background: #ffd700; transform: scale(1.02); }
+
+  .copy-btn.copied {
+    background: #22c55e;
+    color: #fff;
+    pointer-events: none;
+  }
+
+  .copy-btn .copy-icon, .copy-btn .check-icon { transition: all 0.2s; }
+  .copy-btn .check-icon { display: none; }
+  .copy-btn.copied .copy-icon { display: none; }
+  .copy-btn.copied .check-icon { display: inline; }
+
+  .char-count {
+    font-size: 11px;
+    color: var(--gray);
+    margin-left: auto;
+  }
+
+  /* ── SEARCH RESULTS ── */
+  #noResults {
+    display: none;
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--gray);
+  }
+
+  #noResults .icon { font-size: 40px; margin-bottom: 12px; }
+  #noResults p { font-size: 14px; }
+
+  /* ── EMPTY STATE when filtered ── */
+  .card.hidden { display: none; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 32px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--gray);
+    font-size: 12px;
+  }
+
+  footer span { color: var(--yellow); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .card-header { padding: 16px 16px 12px; }
+    .card-divider { margin: 0 16px; }
+    .prompt-block { margin: 16px 16px 20px; }
+    .copy-btn { padding: 8px 14px; font-size: 12px; }
+    .header-logo { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-brand">
+    <div class="header-logo">Coach for Radiance</div>
+    <div class="header-sub">AI Coaching System</div>
+  </div>
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder="Search prompts…" autocomplete="off">
+  </div>
+  <div class="prompt-count">
+    <span id="visibleCount">3</span> prompts
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-eyebrow">AI-Powered Coaching System</div>
+  <h1>Coaching<br><em>Process Steps</em></h1>
+  <p>A structured library of professional coaching prompts — browse by category, read, and copy instantly to use with any AI tool.</p>
+</section>
+
+<!-- ── MAIN ── -->
+<main>
+  <!-- TABS -->
+  <div class="tabs-wrap">
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" role="tab" data-target="weight-loss">Weight Loss</button>
+      <button class="tab-btn" role="tab" data-target="weight-gain">Weight Gain</button>
+      <button class="tab-btn" role="tab" data-target="diabetes">Diabetes</button>
+      <button class="tab-btn" role="tab" data-target="training">Training System</button>
+      <button class="tab-btn" role="tab" data-target="portal">Portal Variables</button>
+    </div>
+  </div>
+
+  <!-- ── SECTION: WEIGHT LOSS ── -->
+  <div class="section active" id="weight-loss">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span>#01</span>Weight Loss</div>
+        <div class="section-meta">Nutrition Coaching / Meal Plan Service</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll('weight-loss')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy All
+      </button>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card" data-search="weight loss nutrition meal plan coach certified nutritionist fat loss egypt">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-header-left">
+            <div class="card-badge">Nutrition</div>
+            <div class="card-title">Weight Loss — Full System Prompt</div>
+            <div class="card-desc">Senior certified nutritionist persona with complete meal plan framework for sustainable fat loss in Egypt.</div>
+          </div>
+          <button class="card-toggle" aria-label="Expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="card-divider"></div>
+          <div class="prompt-block">
+            <div class="prompt-scroll" id="prompt-wl-1">You are a senior certified nutritionist and fat-loss coach with 15+ years of experience in designing personalized, budget-friendly, high-protein meal plans that produce sustainable weight loss without extreme restriction.
+
+Your job is to create a practical, repeatable, and realistic nutrition plan tailored to the client's body stats, preferences, budget, and food availability in Egypt. The plan must support a calorie deficit, preserve lean mass, improve satiety, and be easy to follow in daily life.
+
+CLIENT DETAILS
+- Current weight: [insert]
+- Target weight: [insert]
+- Height: [insert]
+- Age: [insert]
+- Gender: [insert]
+- Activity level: [insert]
+- Dietary restrictions/preferences: [insert]
+- Unpreferred foods: [insert]
+- Budget per week in Egyptian pounds: [insert]
+- Diet style preference: [balanced / low-carb / keto / flexible / other]
+- Daily calorie target: [insert]
+- Meals per day: [insert]
+- Training days per week: [insert]
+- Country / food availability: Egypt
+
+NON-NEGOTIABLE REQUIREMENTS
+- Prioritize high-protein meals to support fullness and muscle retention.
+- Use affordable, common Egyptian foods whenever possible.
+- Keep the plan practical, realistic, and sustainable.
+- Avoid expensive, exotic, or hard-to-find ingredients unless absolutely necessary.
+- Give exact portions in grams, cups, spoons, or pieces.
+- Include estimated calories and protein for each meal.
+- Make the plan easy to repeat and easy to prep.
+- Include smart swaps for foods the client dislikes or cannot find.
+- Include simple hunger-control and adherence strategies.
+- Focus on long-term consistency, not short-term perfection.
+
+WHAT YOU MUST DELIVER
+1. A brief assessment of the client's fat-loss strategy.
+2. Estimated daily calorie target, protein target, and macro breakdown.
+3. A full daily meal plan with meal timing and exact portions.
+4. Calories and protein estimates for every meal and snack.
+5. Alternative food options for breakfast, lunch, dinner, and snacks.
+6. A 7-day repeatable structure, if appropriate.
+7. A one-week shopping list using budget-friendly Egyptian foods.
+8. Food swaps for budget, availability, and taste preferences.
+9. Tips to improve satiety, control cravings, and stay consistent.
+10. Common mistakes to avoid during fat loss.
+11. A simple adherence checklist.
+
+OUTPUT FORMAT
+- Strategy summary
+- Nutrition targets
+- Meal plan
+- Food swaps
+- Shopping list
+- Tips
+- Mistakes to avoid
+- Adherence checklist</div>
+            <div class="card-actions">
+              <button class="copy-btn" onclick="copyPrompt('prompt-wl-1', this)">
+                <svg class="copy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                <svg class="check-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="btn-label">Copy Prompt</span>
+              </button>
+              <span class="char-count" id="chars-prompt-wl-1"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION: WEIGHT GAIN ── -->
+  <div class="section" id="weight-gain">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span>#02</span>Weight Gain</div>
+        <div class="section-meta">Healthy Weight Gain / Meal Plan Service</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll('weight-gain')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy All
+      </button>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card" data-search="weight gain nutrition meal plan mass building egypt calorie dense">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-header-left">
+            <div class="card-badge">Nutrition</div>
+            <div class="card-title">Weight Gain — Full System Prompt</div>
+            <div class="card-desc">Healthy weight gain coach persona with calorie-dense, budget-friendly Egyptian meal plan framework.</div>
+          </div>
+          <button class="card-toggle" aria-label="Expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="card-divider"></div>
+          <div class="prompt-block">
+            <div class="prompt-scroll" id="prompt-wg-1">You are a senior certified nutritionist and healthy weight-gain coach with 15+ years of experience in creating practical, budget-friendly, high-protein meal plans that help clients gain weight in a controlled, healthy, and sustainable way.
+
+Your job is to build a personalized nutrition plan that increases calorie intake without relying on junk food, overeating, or unhealthy shortcuts. The plan must be realistic, affordable, easy to follow, and based on foods commonly available in Egypt.
+
+CLIENT DETAILS
+- Current weight: [insert]
+- Target weight: [insert]
+- Height: [insert]
+- Age: [insert]
+- Gender: [insert]
+- Activity level: [insert]
+- Dietary restrictions/preferences: [insert]
+- Unpreferred foods: [insert]
+- Budget per week in Egyptian pounds: [insert]
+- Diet style preference: [balanced / high-carb / high-protein / other]
+- Daily calorie target: [insert]
+- Meals per day: [insert]
+- Country / food availability: Egypt
+
+NON-NEGOTIABLE REQUIREMENTS
+- Prioritize calorie-dense but nutritious foods.
+- Include enough protein to support lean mass gain.
+- Use affordable Egyptian foods that are easy to buy and prepare.
+- Make the plan practical for clients with low appetite or busy schedules.
+- Keep meals simple enough to repeat without boredom.
+- Provide exact portions in grams, cups, spoons, or pieces.
+- Include estimated calories and protein for each meal.
+- Add strategies to increase appetite and make eating enough easier.
+- Avoid plans that are too expensive, too complicated, or too low in calories.
+
+WHAT YOU MUST DELIVER
+1. A brief assessment of the client's healthy weight-gain strategy.
+2. Estimated daily calorie target, protein target, and macro breakdown.
+3. A full daily meal plan with meal timing and exact portions.
+4. Calories and protein estimates for every meal and snack.
+5. High-calorie snack ideas and liquid calorie options if needed.
+6. A 7-day repeatable structure, if appropriate.
+7. A one-week shopping list using budget-conscious Egyptian foods.
+8. Food swaps for budget, availability, and taste preferences.
+9. Tips to improve appetite, increase calorie intake, and reduce early fullness.
+10. Common mistakes to avoid during weight gain.
+11. A simple adherence checklist.
+
+OUTPUT FORMAT
+- Strategy summary
+- Nutrition targets
+- Meal plan
+- Food swaps
+- Shopping list
+- Tips
+- Mistakes to avoid
+- Adherence checklist</div>
+            <div class="card-actions">
+              <button class="copy-btn" onclick="copyPrompt('prompt-wg-1', this)">
+                <svg class="copy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                <svg class="check-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="btn-label">Copy Prompt</span>
+              </button>
+              <span class="char-count" id="chars-prompt-wg-1"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION: DIABETES ── -->
+  <div class="section" id="diabetes">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span>#03</span>Diabetes</div>
+        <div class="section-meta">Medical Nutrition Therapy — Type 1 Diabetes</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll('diabetes')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy All
+      </button>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card" data-search="diabetes type 1 insulin nutrition therapy medical blood sugar carbs egypt">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-header-left">
+            <div class="card-badge">Medical Nutrition</div>
+            <div class="card-title">Type 1 Diabetes — Medical Nutrition Therapy Prompt</div>
+            <div class="card-desc">Safe, structured meal planning that fits an existing insulin regimen. Includes critical safety rules and red flags.</div>
+          </div>
+          <button class="card-toggle" aria-label="Expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="card-divider"></div>
+          <div class="prompt-block">
+            <div class="prompt-scroll" id="prompt-db-1">You are a diabetes nutrition specialist with extensive experience creating safe, practical, budget-conscious meal plans for people with Type 1 diabetes.
+
+Your job is to design a meal plan that supports healthy weight management while fitting the insulin regimen already prescribed by the doctor.
+
+CRITICAL SAFETY RULES
+- Do not calculate, change, increase, decrease, or recommend insulin doses.
+- Do not suggest insulin corrections beyond what the doctor has already prescribed.
+- Only organize meals, meal timing, portion sizes, and carbohydrate distribution so they fit safely with the existing insulin plan.
+- If any information is missing, unclear, inconsistent, or potentially unsafe, clearly flag it and state that it must be reviewed by the patient's doctor or diabetes care team.
+- If the meal timing and insulin timing do not match well, explain the concern without changing the prescription.
+- Keep the response within nutrition planning and basic safety guidance only.
+
+PATIENT DETAILS
+- Current weight: [insert]
+- Target weight: [insert]
+- Height: [insert]
+- Age: [insert]
+- Gender: [insert]
+- Activity level: [insert]
+- Weight goal: [loss / maintenance / gain]
+- Budget per week in Egyptian pounds: [insert]
+- Dietary restrictions/preferences: [insert]
+- Unpreferred foods: [insert]
+- Foods to avoid: [insert]
+- Daily schedule / meal timing: [insert]
+- Country / food availability: Egypt
+
+DOCTOR-PRESCRIBED DIABETES TREATMENT DETAILS
+- Basal insulin name: [insert]
+- Basal insulin dose: [insert]
+- Basal insulin timing: [insert]
+- Bolus / mealtime insulin name: [insert]
+- Bolus insulin dose or insulin-to-carb ratio exactly as prescribed: [insert]
+- Correction factor or correction scale exactly as prescribed: [insert]
+- Timing of insulin before meals: [insert]
+- CGM or fingerstick plan: [insert]
+- Target blood sugar range given by the doctor: [insert]
+- History of hypoglycemia: [insert]
+- History of hyperglycemia: [insert]
+- Recent HbA1c if available: [insert]
+
+NUTRITION GOALS
+- Support safe and steady weight loss, weight control, or weight gain as appropriate.
+- Keep carbohydrates consistent and clearly counted.
+- Prioritize high-protein, high-fiber, affordable foods available in Egypt.
+- Make meals realistic, simple, and repeatable.
+- Reduce blood sugar spikes through smart food combinations and meal structure.
+- Include snacks only when needed for safety, schedule, or glucose stability.
+
+WHAT YOU MUST DELIVER
+1. A brief safety check showing any missing or concerning information before the plan.
+2. A clear daily meal plan with meal timing.
+3. Carbohydrate count for each meal and snack.
+4. Protein-focused food choices for each meal.
+5. Practical food swaps using affordable Egyptian foods.
+6. A one-week shopping list.
+7. Simple tips to reduce blood sugar swings.
+8. Guidance on what to do with low blood sugar using standard safety practices.
+9. Red flags that mean the patient should contact their doctor.
+10. Notes explaining how the meals fit the prescribed insulin schedule.
+
+OUTPUT FORMAT
+- Safety check
+- Meal timing
+- Meal plan
+- Carb counts
+- Food swaps
+- Shopping list
+- Hypoglycemia safety notes
+- Red flags
+- Insulin-meal alignment notes</div>
+            <div class="card-actions">
+              <button class="copy-btn" onclick="copyPrompt('prompt-db-1', this)">
+                <svg class="copy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                <svg class="check-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="btn-label">Copy Prompt</span>
+              </button>
+              <span class="char-count" id="chars-prompt-db-1"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION: TRAINING ── -->
+  <div class="section" id="training">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span>#04</span>Training System</div>
+        <div class="section-meta">Autonomous Strength & Conditioning AI — 12-Week Program</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll('training')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy All
+      </button>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card" data-search="training strength conditioning periodization 12 week program hypertrophy fat loss workout gym">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-header-left">
+            <div class="card-badge">Strength & Conditioning</div>
+            <div class="card-title">12-Week Coaching System — Full Training Prompt</div>
+            <div class="card-desc">Complete autonomous periodization architect. Builds a fully customized 12-week program with injury-safe progressions and split design.</div>
+          </div>
+          <button class="card-toggle" aria-label="Expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="card-divider"></div>
+          <div class="prompt-block">
+            <div class="prompt-scroll" id="prompt-tr-1">You are now operating as an Autonomous Strength & Conditioning AI System + Elite Periodization Architect + Injury-Safe Performance Coach.
+
+Your task is not just to write a program — it is to build a complete 12-week training system that is repeatable and customizable for any client, based on scientific training logic for any goal: performance / fat loss / strength / hypertrophy.
+
+Every program you produce must be:
+- Executable immediately without additional explanation
+- Fully customized for the client
+- Built on real periodization principles
+- Progressive in volume and intensity
+- Safe for injuries
+- Appropriate for the available location and equipment
+- Crystal clear for the client
+
+────────────────────────
+INPUT LAYER (CLIENT DATA)
+────────────────────────
+Extract the following data first. If any element is missing and affects program accuracy → stop and ask only about it:
+
+CLIENT PROFILE:
+- Age:
+- Gender:
+- Height / Weight:
+- Body fat % (if available):
+- Training level (Beginner / Intermediate / Advanced):
+
+GOAL HIERARCHY:
+- Primary goal:
+- Secondary goal (optional):
+
+TRAINING CONTEXT:
+- Available training days/week:
+- Weekly schedule (exact days):
+- Session duration:
+- Training environment (Home / Gym / Open Area / Hybrid):
+- Available equipment:
+
+RECOVERY & LIFESTYLE:
+- Sleep hours:
+- Daily activity level:
+- Stress level (Low / Medium / High):
+
+LIMITATIONS:
+- Injuries:
+- Pain triggers:
+- Movement restrictions:
+
+PREFERENCES:
+- Exercises disliked:
+- Cardio preference:
+- Sport background (if any):
+
+────────────────────────
+DECISION ENGINE (INTERNAL RULES)
+────────────────────────
+Apply the following rules without mentioning them to the client:
+
+A) Periodization Selection:
+- Hypertrophy → Accumulation → Intensification → Deload → Peak
+- Strength → Neural adaptation → Heavy accumulation → Peaking → Deload
+- Fat loss → Strength retention + metabolic conditioning blocks
+- Athletic → Power + speed + strength integration
+
+B) Volume Logic:
+- Beginner: 8–12 sets/muscle/week
+- Intermediate: 12–18 sets/muscle/week
+- Advanced: 14–24 sets/muscle/week
+
+C) Intensity Logic:
+- Hypertrophy: 60–80% 1RM (RPE 6–9)
+- Strength: 75–95% 1RM (RPE 7–10)
+- Fat loss: mixed intensity + conditioning
+- Athletic: wave-based intensity
+
+D) Progression Rule:
+- Increase load OR reps OR sets weekly (not all together)
+- Every 4th week = recovery modulation (deload or reduced volume)
+
+E) Injury Rule:
+- Never load painful range
+- Always provide substitution pattern: push / pull / hinge / squat / carry / core
+
+────────────────────────
+OUTPUT ARCHITECTURE (STRICT FORMAT)
+────────────────────────
+
+A) CLIENT SNAPSHOT
+- Accurate summary of client status + goal + limitations + training strategy
+
+B) TRAINING STRATEGY (12 WEEKS)
+- Explain periodization logic
+- How the body will change across phases
+- Expected performance outcomes
+- Why this split is optimal
+
+C) SPLIT DESIGN
+- Identify appropriate split (Full body / Upper-Lower / PPL / Hybrid)
+- Scientific rationale for the choice
+
+D) 12-WEEK MACRO OVERVIEW TABLE
+Table containing:
+Week | Phase | Goal | Volume Trend | Intensity Trend | Focus | Recovery Note | Injury Adjustment
+
+E) FULL PROGRAM (WEEKLY STRUCTURE)
+For each week:
+- Number of sessions
+- Session details:
+  * Warm-up (mobility + activation)
+  * Main lifts
+  * Accessories
+  * Core
+  * Conditioning (if needed)
+
+For each exercise:
+- sets / reps / RPE
+- rest time
+- tempo (if needed)
+- substitution option
+
+F) PROGRESSION MODEL
+- How load increases weekly
+- When to reduce volume
+- How deload is implemented
+- How progress is measured
+
+G) INJURY & SAFETY SYSTEM
+For each injury:
+- Clear prohibitions
+- Direct alternatives
+- Range of motion modifications
+- Client warning signals
+
+H) COACHING NOTES (CLIENT-FACING)
+- Execution rules
+- Common mistakes
+- How to know you're progressing
+- When to reduce load
+- How to log performance
+
+I) PERFORMANCE OUTCOME MODEL
+- What will happen during 12 weeks (realistically)
+- Success indicators: strength / hypertrophy / fat loss / conditioning
+
+────────────────────────
+STYLE RULES
+────────────────────────
+- Do not use generic motivational filler language
+- Everything must be executable
+- Do not assume unavailable equipment
+- Do not ignore injuries
+- Do not repeat the same intensity week to week
+- Make the program "coach-grade" not "fitness blog"
+- Use training science terminology where needed
+
+────────────────────────
+EXECUTION COMMAND
+────────────────────────
+Start immediately only after complete data is provided.
+If data is missing: request only the missing data, then stop.</div>
+            <div class="card-actions">
+              <button class="copy-btn" onclick="copyPrompt('prompt-tr-1', this)">
+                <svg class="copy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                <svg class="check-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="btn-label">Copy Prompt</span>
+              </button>
+              <span class="char-count" id="chars-prompt-tr-1"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION: PORTAL VARIABLES ── -->
+  <div class="section" id="portal">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span>#05</span>Portal Variables</div>
+        <div class="section-meta">Master Variables Map + Variable Replacement Engine</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll('portal')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy All
+      </button>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card" data-search="variables map portal coaching client weight goal workout meal plan nutrition system">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-header-left">
+            <div class="card-badge">System</div>
+            <div class="card-title">Master Variables Map</div>
+            <div class="card-desc">Complete list of all {{VARIABLE}} placeholders used across the coaching portal system.</div>
+          </div>
+          <button class="card-toggle" aria-label="Expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="card-divider"></div>
+          <div class="prompt-block">
+            <div class="prompt-scroll" id="prompt-pv-1">[CLIENT CORE]
+{{CLIENT_NAME}}
+{{CLIENT_SUBTITLE}}  — e.g. Fat Loss Phase / Muscle Build Phase
+{{AGE}}
+{{GENDER}}
+
+[WEIGHT SYSTEM]
+{{START_WEIGHT}}
+{{CURRENT_WEIGHT}}
+{{TARGET_WEIGHT}}
+{{TOTAL_CHANGE}}
+{{PROGRAM_DURATION}}
+
+[GOAL SYSTEM]
+{{GOAL_TYPE}}  — Fat Loss / Muscle Gain / Recomp
+{{WHY_START}}
+
+[WORKOUT SYSTEM]
+{{WORKOUT_SPLIT_NAME}}
+{{TRAINING_DAYS}}
+{{REST_DAYS}}
+
+[WEEKLY STRUCTURE]
+{{DAY1_TYPE}} {{DAY1_WORKOUT}} {{DAY1_CARDIO}}
+{{DAY2_TYPE}} {{DAY2_WORKOUT}} {{DAY2_CARDIO}}
+{{DAY3_TYPE}} {{DAY3_WORKOUT}} {{DAY3_CARDIO}}
+{{DAY4_TYPE}} {{DAY4_WORKOUT}} {{DAY4_CARDIO}}
+{{DAY5_TYPE}} {{DAY5_WORKOUT}} {{DAY5_CARDIO}}
+{{DAY6_TYPE}} {{DAY6_WORKOUT}} {{DAY6_CARDIO}}
+{{DAY7_TYPE}} {{DAY7_WORKOUT}} {{DAY7_CARDIO}}
+
+[NUTRITION SYSTEM]
+{{DIET_NAME}}
+{{DIET_TYPE}}
+{{DIET_DESCRIPTION}}
+
+[MEAL PLAN]
+{{MEAL_1}}
+{{MEAL_2}}
+{{MEAL_3}}
+{{MEAL_4}}
+{{MEAL_5}}
+
+[CARDIO]
+{{CARDIO_PLAN}}
+
+[SUPPLEMENTS]
+{{SUPP_1}}
+{{SUPP_2}}
+{{SUPP_3}}
+{{SUPP_4}}
+
+[CUSTOM GUIDE]
+{{PRE_WORKOUT}}
+{{POST_WORKOUT}}
+{{HYDRATION}}
+{{SLEEP}}
+{{ADHERENCE}}
+
+[PROGRESS]
+{{WEIGHT_PROGRESS_DATA}}</div>
+            <div class="card-actions">
+              <button class="copy-btn" onclick="copyPrompt('prompt-pv-1', this)">
+                <svg class="copy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                <svg class="check-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="btn-label">Copy Prompt</span>
+              </button>
+              <span class="char-count" id="chars-prompt-pv-1"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-search="variable replacement engine portal strict rules output final prompt">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-header-left">
+            <div class="card-badge">System</div>
+            <div class="card-title">Variable Replacement Engine — Strict Execution Prompt</div>
+            <div class="card-desc">Instructs AI to act as a precise 1:1 variable replacement system. No creative rewriting — exact substitution only.</div>
+          </div>
+          <button class="card-toggle" aria-label="Expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="card-divider"></div>
+          <div class="prompt-block">
+            <div class="prompt-scroll" id="prompt-pv-2">IMPORTANT: Treat this as a strict variable replacement engine, not a content generator.
+
+You are now operating as a variable replacement system inside a professional Coaching Portal.
+
+Your task is NOT creative writing, and NOT redesign.
+Your ONLY task is:
+→ Replace Variables inside the portal with the given values — with complete precision.
+
+━━━━━━━━━━━━━━━━━━━
+[INPUTS]
+1. BASE PORTAL:
+(code or text containing Variables in {{...}} format)
+
+2. VARIABLES MAP:
+(list of variables and their values)
+
+━━━━━━━━━━━━━━━━━━━
+[CORE TASK]
+Replace every Variable in the form:
+{{VARIABLE_NAME}}
+with its corresponding value from the VARIABLES MAP.
+
+━━━━━━━━━━━━━━━━━━━
+[STRICT RULES — Very Important]
+1. PROHIBITED: Editing any text outside the Variables.
+2. PROHIBITED: Rephrasing any fixed sentence.
+3. PROHIBITED: Changing section order.
+4. PROHIBITED: Deleting or adding any element.
+5. PROHIBITED: Changing formatting, HTML, or CSS.
+6. PROHIBITED: Interpretation or commentary.
+7. PROHIBITED: Improving or "beautifying" the text.
+8. If a variable value is not found:
+   Leave it as-is {{VARIABLE_NAME}} without deleting.
+
+━━━━━━━━━━━━━━━━━━━
+[PRECISION RULES]
+- Replacement must be 1:1 only.
+- Do not add words before or after the value.
+- Do not change units (Weeks / Years / KG).
+- Do not reformat numbers.
+
+Example:
+{{CURRENT_WEIGHT}} → 92
+Becomes: 92
+NOT: 92 KG (unless already in the portal)
+
+━━━━━━━━━━━━━━━━━━━
+[STEP VALIDATION — Before Output]
+Verify:
+✓ No replaceable Variable left unreplaced
+✓ No fixed text was changed
+✓ Structure is 100% identical to the Base
+
+━━━━━━━━━━━━━━━━━━━
+[OUTPUT RULE]
+Output the final version only after replacement:
+- No explanation
+- No comments
+- No additional text
+
+━━━━━━━━━━━━━━━━━━━
+Begin execution now.</div>
+            <div class="card-actions">
+              <button class="copy-btn" onclick="copyPrompt('prompt-pv-2', this)">
+                <svg class="copy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                <svg class="check-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="btn-label">Copy Prompt</span>
+              </button>
+              <span class="char-count" id="chars-prompt-pv-2"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NO RESULTS -->
+  <div id="noResults">
+    <div class="icon">🔍</div>
+    <p>No prompts match your search. Try different keywords.</p>
+  </div>
+</main>
+
+<footer>
+  Built for <span>Coach for Radiance</span> — AI-Powered Coaching System
+</footer>
+
+<script>
+  // ── TABS ──
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+      updateCount();
+    });
+  });
+
+  // ── TOGGLE CARD ──
+  function toggleCard(header) {
+    const card = header.closest('.card');
+    card.classList.toggle('open');
+  }
+
+  // ── COPY PROMPT ──
+  function copyPrompt(id, btn) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.classList.add('copied');
+      btn.querySelector('.btn-label').textContent = 'Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.querySelector('.btn-label').textContent = 'Copy Prompt';
+      }, 1800);
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.classList.add('copied');
+      btn.querySelector('.btn-label').textContent = 'Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.querySelector('.btn-label').textContent = 'Copy Prompt';
+      }, 1800);
+    });
+  }
+
+  // ── COPY ALL ──
+  function copyAll(sectionId) {
+    const section = document.getElementById(sectionId);
+    const prompts = section.querySelectorAll('.prompt-scroll');
+    const combined = Array.from(prompts).map((p, i) => `=== PROMPT ${i+1} ===\n${p.innerText}`).join('\n\n');
+    navigator.clipboard.writeText(combined).then(() => {
+      const btn = section.querySelector('.copy-all-btn');
+      const orig = btn.innerHTML;
+      btn.textContent = '✓ All Copied!';
+      btn.style.color = '#22c55e';
+      btn.style.borderColor = '#22c55e';
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 2000);
+    });
+  }
+
+  // ── SEARCH ──
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.card');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const searchData = card.dataset.search || '';
+      const title = card.querySelector('.card-title')?.textContent || '';
+      const desc = card.querySelector('.card-desc')?.textContent || '';
+      const promptText = card.querySelector('.prompt-scroll')?.textContent || '';
+      const haystack = (searchData + ' ' + title + ' ' + desc + ' ' + promptText).toLowerCase();
+      const match = !q || haystack.includes(q);
+
+      card.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+
+    // Show/hide all sections when searching
+    if (q) {
+      document.querySelectorAll('.section').forEach(s => s.style.display = 'block');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    } else {
+      document.querySelectorAll('.section').forEach(s => s.style.display = '');
+      const activeSection = document.querySelector('.section.active');
+      if (!activeSection) {
+        document.querySelector('.section').classList.add('active');
+        document.querySelector('.tab-btn').classList.add('active');
+      }
+      updateCount();
+      return;
+    }
+
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+    document.getElementById('visibleCount').textContent = visible;
+  });
+
+  // ── CHAR COUNTS ──
+  function updateCharCounts() {
+    document.querySelectorAll('.prompt-scroll').forEach(el => {
+      const countEl = document.getElementById('chars-' + el.id);
+      if (countEl) {
+        const chars = el.innerText.length;
+        countEl.textContent = chars.toLocaleString() + ' chars';
+      }
+    });
+  }
+
+  // ── VISIBLE COUNT ──
+  function updateCount() {
+    const active = document.querySelector('.section.active');
+    if (!active) return;
+    const cards = active.querySelectorAll('.card:not(.hidden)');
+    document.getElementById('visibleCount').textContent = cards.length;
+  }
+
+  // ── INIT ──
+  window.addEventListener('load', () => {
+    updateCharCounts();
+    updateCount();
+  });
+</script>
+</body>
+</html>
