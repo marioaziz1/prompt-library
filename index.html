@@ -1303,6 +1303,19 @@ document.getElementById('promptModal')?.addEventListener('click', (e) => {
 // INITIALIZATION
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// EXPOSE FUNCTIONS TO GLOBAL SCOPE
+// (required because type="module" makes functions private)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+window.openAddModal = openAddModal;
+window.openEditModal = openEditModal;
+window.closeModal = closeModal;
+window.savePrompt = savePrompt;
+window.toggleCard = toggleCard;
+window.copyPrompt = copyPrompt;
+window.copyAllInCategory = copyAllInCategory;
+window.confirmDelete = confirmDelete;
+
 window.addEventListener('load', async () => {
   await loadPrompts();
   // renderAll() is called by the onSnapshot listener once data arrives
