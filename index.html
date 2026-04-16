@@ -755,6 +755,7 @@
   <div class="prompt-count">
     <span id="totalCount">0</span> / <span id="visibleCount">0</span>
   </div>
+  <div id="syncStatus" style="font-size:11px;font-weight:600;letter-spacing:0.5px;white-space:nowrap;color:#888;" title="Firebase sync status">● Connecting…</div>
 </header>
 
 <!-- ── HERO ── -->
@@ -830,12 +831,26 @@
   Built for <span>Coach for Radiance</span> — AI-Powered Coaching System
 </footer>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, onSnapshot, addDoc, setDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyANG6GtBGpozBuW226J_cGt-R5ufztdO8I",
+  authDomain: "prompt-8d779.firebaseapp.com",
+  projectId: "prompt-8d779",
+  storageBucket: "prompt-8d779.firebasestorage.app",
+  messagingSenderId: "545842810613",
+  appId: "1:545842810613:web:6621a3e0f6d594f3657fbc"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const COLLECTION = "coaching_prompts";
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// DATA LAYER - Local Storage Management
+// DATA LAYER — Firebase Firestore (real-time sync)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const STORAGE_KEY = 'coaching_prompts_library';
 const DEFAULT_PROMPTS = [
   {
     id: 'wl-1',
@@ -880,25 +895,54 @@ const DEFAULT_PROMPTS = [
 ];
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// STATE MANAGEMENT
+// STATE MANAGEMENT (Firebase)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 let promptsData = [];
 let currentEditingId = null;
 let currentFilter = '';
 
-function loadPrompts() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    promptsData = JSON.parse(stored);
-  } else {
-    promptsData = JSON.parse(JSON.stringify(DEFAULT_PROMPTS));
-    savePromptsToStorage();
+function setSyncStatus(status) {
+  let el = document.getElementById('syncStatus');
+  if (!el) return;
+  if (status === 'synced') {
+    el.textContent = '● Live';
+    el.style.color = '#22c55e';
+    el.title = 'Connected to Firebase — syncing in real time';
+  } else if (status === 'syncing') {
+    el.textContent = '● Syncing…';
+    el.style.color = '#f5c800';
+    el.title = 'Saving to Firebase…';
+  } else if (status === 'error') {
+    el.textContent = '● Offline';
+    el.style.color = '#ef4444';
+    el.title = 'Firebase connection error';
   }
 }
 
-function savePromptsToStorage() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(promptsData));
+async function loadPrompts() {
+  const colRef = collection(db, COLLECTION);
+
+  // If Firestore has no docs yet, seed with defaults
+  const snapshot = await getDocs(colRef);
+  if (snapshot.empty) {
+    setSyncStatus('syncing');
+    for (const p of DEFAULT_PROMPTS) {
+      const { id, ...data } = p;
+      await setDoc(doc(db, COLLECTION, id), { ...data, legacyId: id });
+    }
+  }
+
+  // Real-time listener — fires on every change from ANY device
+  onSnapshot(colRef, (snap) => {
+    promptsData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    promptsData = promptsData.map(p => ({ ...p, tags: Array.isArray(p.tags) ? p.tags : [] }));
+    renderAll();
+    setSyncStatus('synced');
+  }, (err) => {
+    console.error('Firestore error:', err);
+    setSyncStatus('error');
+  });
 }
 
 function getCategories() {
@@ -916,47 +960,36 @@ function filterPrompts(query) {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CRUD OPERATIONS
+// CRUD OPERATIONS (Firebase)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function addPrompt(data) {
+async function addPrompt(data) {
+  setSyncStatus('syncing');
   const newPrompt = {
-    id: 'prompt-' + Date.now() + Math.random().toString(36).substr(2, 9),
     title: data.title,
     category: data.category,
     tags: data.tags ? data.tags.split(',').map(t => t.trim()).filter(t => t) : [],
     content: data.content,
     createdAt: Date.now()
   };
-  promptsData.push(newPrompt);
-  savePromptsToStorage();
-  return newPrompt;
+  await addDoc(collection(db, COLLECTION), newPrompt);
 }
 
-function editPrompt(id, data) {
-  const index = promptsData.findIndex(p => p.id === id);
-  if (index !== -1) {
-    promptsData[index] = {
-      ...promptsData[index],
-      title: data.title,
-      category: data.category,
-      tags: data.tags ? data.tags.split(',').map(t => t.trim()).filter(t => t) : [],
-      content: data.content
-    };
-    savePromptsToStorage();
-    return promptsData[index];
-  }
-  return null;
+async function editPrompt(id, data) {
+  setSyncStatus('syncing');
+  const updated = {
+    title: data.title,
+    category: data.category,
+    tags: data.tags ? data.tags.split(',').map(t => t.trim()).filter(t => t) : [],
+    content: data.content,
+    updatedAt: Date.now()
+  };
+  await setDoc(doc(db, COLLECTION, id), updated, { merge: true });
 }
 
-function deletePrompt(id) {
-  const index = promptsData.findIndex(p => p.id === id);
-  if (index !== -1) {
-    promptsData.splice(index, 1);
-    savePromptsToStorage();
-    return true;
-  }
-  return false;
+async function deletePrompt(id) {
+  setSyncStatus('syncing');
+  await deleteDoc(doc(db, COLLECTION, id));
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1113,7 +1146,7 @@ function closeModal() {
   currentEditingId = null;
 }
 
-function savePrompt(event) {
+async function savePrompt(event) {
   event.preventDefault();
   
   // Get category from either dropdown or new input
@@ -1134,13 +1167,13 @@ function savePrompt(event) {
   }
   
   if (currentEditingId) {
-    editPrompt(currentEditingId, data);
+    await editPrompt(currentEditingId, data);
   } else {
-    addPrompt(data);
+    await addPrompt(data);
   }
   
   closeModal();
-  renderAll();
+  // renderAll() is called automatically by the Firestore onSnapshot listener
 }
 
 function populateCategorySelect(selected = '') {
@@ -1193,10 +1226,10 @@ function copyAllInCategory(category) {
   });
 }
 
-function confirmDelete(id) {
+async function confirmDelete(id) {
   if (confirm('Are you sure you want to delete this prompt? This cannot be undone.')) {
-    deletePrompt(id);
-    renderAll();
+    await deletePrompt(id);
+    // renderAll() is called automatically by the Firestore onSnapshot listener
   }
 }
 
@@ -1270,9 +1303,9 @@ document.getElementById('promptModal')?.addEventListener('click', (e) => {
 // INITIALIZATION
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-window.addEventListener('load', () => {
-  loadPrompts();
-  renderAll();
+window.addEventListener('load', async () => {
+  await loadPrompts();
+  // renderAll() is called by the onSnapshot listener once data arrives
 });
 </script>
 </body>
